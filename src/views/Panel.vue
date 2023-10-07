@@ -12,7 +12,7 @@
                   <th>Albun</th>
                   <th>Time</th>
                </tr>
-               <tr v-for="(row, trIndex) in data.playlist" :key="trIndex">
+               <tr v-on:click="this.playSong(trIndex)" v-for="(row, trIndex) in data.playlist" :key="trIndex">
                   <td>{{trIndex+1}}</td>
                   <td>
                      <div>
@@ -113,6 +113,34 @@ export default {
       return { 
          data:{
             playlist:[
+               {
+                  id:'testSong.mp3',
+                  name:'Straw Berry',
+                  albun:'Viva la vida or death and all his friends',
+                  time:'4:09',
+                  autor:'Coldplay',
+               },
+               {
+                  id:'ya_me_entere.mp3',
+                  name:'Ya Me Entere',
+                  albun:'Reik',
+                  time:'3:29',
+                  autor:'Reik',
+               },
+               {
+                  id:'the_way.mp3',
+                  name:'The Way',
+                  albun:'The Way',
+                  time:'3:46',
+                  autor:'Ariana Grande',
+               },
+               {
+                  id:'diamonds.mp3',
+                  name:'Diamonds',
+                  albun:'Diamonds',
+                  time:'4:42',
+                  autor:'Rihanna',
+               },
                {
                   name:'Unforgettable',
                   albun:'Unforgettable',
@@ -266,9 +294,19 @@ export default {
          //tools.renderSlider('sliderShowcase')
       }, 500);
    },
-   method:{
-      play(){
-         
+   methods:{
+      playSong(index){
+         console.log(index, this.data.playlist[index]);
+         this.song = this.data.playlist[index]
+         const audioElement = document.getElementById("play");
+         console.log(audioElement.childNodes[0].src);
+         audioElement.childNodes[0].src = require('@/assets/songs/'+this.data.playlist[index].id)
+         audioElement.load();
+         audioElement.play();
+         //if (audioElement.paused) {
+         //} else {
+         //   audioElement.pause();
+         //}
       }
    }
 }

@@ -736,6 +736,14 @@
   }
   table{
     width: 100%;
+    tr{
+      .hover;
+      cursor: pointer;
+      &:hover{
+        .hover;
+        background: #ffffff10;
+      }
+    }
     th{
       font-size: 10px;
       opacity: 0.5;
