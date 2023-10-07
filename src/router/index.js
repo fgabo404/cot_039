@@ -1,38 +1,32 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/MangoDash.vue'
 
 const routes = [
   // Web Site
   {
     path: '/',
-    name: 'landing-page',
-    component: () => import('../website/LandingPage.vue')
+    name: 'login-page',
+    component: () => import('@/views/Login.vue')
   },
-  {
-    path: '/home',
-    name: 'home',
-    component: () => import('../website/Home.vue')
-  },
-  {
-    path: '/services',
-    name: 'services',
-    component: () => import('../website/Services.vue')
-  },
-  {
-    path: '/about',
-    name: 'about',
-    component: () => import('../website/About.vue')
-  },
-  {
-    path: '/portfolio',
-    name: 'portfolio',
-    component: () => import('../website/Portfolio.vue')
-  },
-  // Dash
+   //Dash
   {
     path: '/dash',
-    name: 'dash',
-    component: HomeView
+   name: 'dash',
+    component: () => import('@/views/Dash.vue')
+  },
+  {
+    path: '/panel',
+   name: 'panel',
+    component: () => import('@/views/Panel.vue')
+  },
+  {
+    path: '/edition',
+    name: 'edition',
+    component: () => import('@/views/Edition.vue')
+  },
+  {
+    path: '/blog',
+    name: 'blog',
+    component: () => import('@/views/Blog.vue')
   },
 ]
 
