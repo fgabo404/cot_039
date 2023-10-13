@@ -1,0 +1,16 @@
+{
+  "resourceName": "s3seminariostoragecffe284a",
+  "bucketName": "seminario-storage-cffe284a",
+  "policyUUID": "06254fbf",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "DELETE",
+    "READ",
+    "CREATE_AND_UPDATE"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ]
+}

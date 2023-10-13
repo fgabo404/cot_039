@@ -1,0 +1,20 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-seminario-staging-42909-authRole",
+      "UnauthRoleArn": "arn:aws:iam::717077502973:role/amplify-seminario-staging-42909-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::717077502973:role/amplify-seminario-staging-42909-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-seminario-staging-42909-deployment",
+      "UnauthRoleName": "amplify-seminario-staging-42909-unauthRole",
+      "StackName": "amplify-seminario-staging-42909",
+      "StackId": "arn:aws:cloudformation:us-east-1:717077502973:stack/amplify-seminario-staging-42909/e3561f00-68b7-11ee-89a3-0e8fc655f88d",
+      "AmplifyAppId": "d12wfwe4fbshrn"
+    },
+    "categories": {
+      "auth": {
+        "seminario": {}
+      }
+    }
+  }
+}

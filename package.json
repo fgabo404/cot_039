@@ -8,11 +8,17 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@aws-amplify/ui-vue": "^3.1.29",
     "@splidejs/vue-splide": "^0.6.12",
+    "aws-amplify": "^5.3.11",
+    "buffer": "^6.0.3",
     "core-js": "^3.8.3",
     "jquery": "^3.6.1",
+    "jsmediatags": "^3.9.7",
+    "music-metadata": "^8.1.4",
     "register-service-worker": "^1.7.2",
     "sweetalert2": "^11.4.8",
+    "uuid": "^9.0.1",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
     "vuex": "^4.0.0"

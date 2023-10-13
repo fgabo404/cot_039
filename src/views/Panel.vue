@@ -12,7 +12,7 @@
                   <th>Albun</th>
                   <th>Time</th>
                </tr>
-               <tr v-on:click="this.playSong(trIndex)" v-for="(row, trIndex) in data.playlist" :key="trIndex">
+               <tr v-on:click="this.playSong(row)" v-for="(row, trIndex) in data.SNG" :key="trIndex">
                   <td>{{trIndex+1}}</td>
                   <td>
                      <div>
@@ -34,7 +34,7 @@
                   <th>Title</th>
                   <th>Time</th>
                </tr>
-               <tr v-for="(row, trIndex) in data.ads" :key="trIndex">
+               <tr v-on:click="this.playSong(row)" v-for="(row, trIndex) in data.ADS" :key="trIndex">
                   <td>{{trIndex+1}}</td>
                   <td>
                      <div>
@@ -68,7 +68,7 @@
          </div>
       </div>
    </div>
-   <div class="player">
+   <div class="player"> 
     <div class="wrap container-in">
       <div class="song">
          <p>{{song.name}}</p>
@@ -93,8 +93,10 @@
 
 <script>
 //tools
-//import * as tools from '@/store/tools.js'
-// Default theme
+
+import * as tools from '@/store/tools.js'
+import { API, Storage } from "aws-amplify";
+import { listSongs } from "../graphql/queries";
 
 // @ is an alias to /src
 //Ui
@@ -112,7 +114,7 @@ export default {
    data() {
       return { 
          data:{
-            playlist:[
+            SNG:[
                {
                   id:'testSong.mp3',
                   name:'Straw Berry',
@@ -238,7 +240,7 @@ export default {
                   autor:'Alice Merton',
                },
             ],
-            ads:[
+            ADS:[
                {
                   name:'Lorem impsu',
                   autor:'Businnes',
@@ -290,23 +292,40 @@ export default {
       }
    },
    created() {
-      setTimeout(() => {
-         //tools.renderSlider('sliderShowcase')
-      }, 500);
+      this.data.SNG = []
+      this.data.ADS = []
+      this.listSong()
    },
    methods:{
-      playSong(index){
-         console.log(index, this.data.playlist[index]);
-         this.song = this.data.playlist[index]
+      async playSong(data){
+         
+         const url = await Storage.get(data.id+".mp3", {
+            level: "public"
+         });
+    
+         this.song = data
          const audioElement = document.getElementById("play");
-         console.log(audioElement.childNodes[0].src);
-         audioElement.childNodes[0].src = require('@/assets/songs/'+this.data.playlist[index].id)
+         audioElement.childNodes[0].src = url
          audioElement.load();
          audioElement.play();
          //if (audioElement.paused) {
          //} else {
          //   audioElement.pause();
          //}
+      },
+      async listSong( ){
+         try {
+            let pulldata = await API.graphql({
+               query: listSongs
+            })
+            pulldata = pulldata.data.listSongs.items
+            pulldata.forEach(element => {
+               this.data[element.key].push(JSON.parse(element.att))
+            });
+         } catch (error) {
+            console.log(error);
+            tools.popUp('info', error)
+         }
       }
    }
 }

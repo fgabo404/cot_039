@@ -12,9 +12,12 @@
             </svg>
             <input type="text" placeholder="User" v-model="user">
             <input type="password" placeholder="Password" v-model="pass">
+            
+            
             <a class="btn-g light" v-on:click="logIn(user, pass)">
                Log In
             </a>
+            
          </div>
       </div>
    </section>
@@ -23,8 +26,9 @@
 <script>
 //tools
 import * as tools from '@/store/tools.js'
-// Default theme
+import { Auth } from 'aws-amplify';
 
+// Default theme
 
 // @ is an alias to /src
 //Ui
@@ -59,11 +63,26 @@ export default {
       }, 500);
    },
    methods:{
-      logIn( user, pass ){
-         if ( this.usersList[user] && this.usersList[user] == pass) {
+      async logIn( username, password   ){
+         console.log( username, password);
+         try {
+            const user = await Auth.signIn(username, password);
+            const session = await Auth.currentUserCredentials();
+            console.log(user);
+            console.log(session);
             this.$router.push({path:'/dash'})
-         }else{
+         } catch (error) {
+            console.log('error signing in', error);
             tools.popUp('info', 'Incorrect user or password')
+         }
+      },
+      async signUp( username, password   ){
+         console.log( username, password);
+         try {
+            const { user } = await Auth.signUp({ username, password });
+            console.log(user);
+         } catch (error) {
+            console.log('error signing up:', error);
          }
       }
    }
