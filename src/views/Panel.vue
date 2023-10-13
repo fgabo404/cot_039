@@ -1,6 +1,7 @@
 <template>
    <img  src="@/assets/bgTexture.png" class="bgDash" id="bgDash" alt="">
    <PaperHeader/>
+
    <div class="wrap panel container-in">
       <div class="col col-md-6"> 
          <div class="block">
@@ -12,16 +13,28 @@
                   <th>Albun</th>
                   <th>Time</th>
                </tr>
-               <tr v-on:click="this.playSong(row)" v-for="(row, trIndex) in data.SNG" :key="trIndex">
-                  <td>{{trIndex+1}}</td>
-                  <td>
-                     <div>
-                        <p>{{row.name}}</p><span>{{row.autor}}</span>
-                     </div>
-                  </td>
-                  <td >{{row.albun}} </td>
-                  <td >{{row.time}} </td>
-               </tr>
+                <draggable
+                  class="dragArea "
+                  :list="data.SNG"
+                  :group="{ name: 'song', pull: 'clone', put: false }"
+                  :clone="cloneSong"
+                  @change="log"
+                  item-key="id"
+                  tag="tbody"
+               >
+                  <template #item="{element}">
+                     <tr v-on:click="element" >
+                        <td>{{data.SNG.indexOf(element)+1}}</td>
+                        <td>
+                           <div>
+                              <p>{{element.name}}</p><span>{{element.autor}}</span>
+                           </div>
+                        </td>
+                        <td >{{element.albun}} </td>
+                        <td >{{element.time}} </td>
+                     </tr>
+                  </template>
+               </draggable>
             </table>
          </div>
       </div>
@@ -34,15 +47,27 @@
                   <th>Title</th>
                   <th>Time</th>
                </tr>
-               <tr v-on:click="this.playSong(row)" v-for="(row, trIndex) in data.ADS" :key="trIndex">
-                  <td>{{trIndex+1}}</td>
-                  <td>
-                     <div>
-                        <p>{{row.name}}</p><span>{{row.autor}}</span>
-                     </div>
-                  </td>
-                  <td >{{row.time}} </td>
-               </tr>
+               <draggable
+                  class="dragArea "
+                  :list="data.ADS"
+                  :group="{ name: 'song', pull: 'clone', put: false }"
+                  :clone="cloneSong"
+                  @change="log"
+                  item-key="id"
+                  tag="tbody"
+               >
+                  <template #item="{element}">
+                     <tr v-on:click="element" >
+                        <td>{{data.ADS.indexOf(element)+1}}</td>
+                        <td>
+                           <div>
+                              <p>{{element.name}}</p><span>{{element.autor}}</span>
+                           </div>
+                        </td>
+                        <td >{{element.time}} </td>
+                     </tr>
+                  </template>
+               </draggable>
             </table>
          </div>
       </div>
@@ -55,15 +80,26 @@
                   <th>Title</th>
                   <th>Time</th>
                </tr>
-               <tr v-for="(row, trIndex) in data.playlist" :key="trIndex">
-                  <td>{{trIndex+1}}</td>
-                  <td>
-                     <div>
-                        <p>{{row.name}}</p><span>{{row.autor}}</span>
-                     </div>
-                  </td>
-                  <td >{{row.time}} </td>
-               </tr>
+               <draggable
+                  class="dragArea "
+                  :list="data.COL"
+                  group="song"
+                  @change="log"
+                  item-key="id"
+                  tag="tbody"
+               >
+                  <template #item="{element}">
+                     <tr v-on:click="element" >
+                        <td>{{data.COL.indexOf(element)+1}}</td>
+                        <td>
+                           <div>
+                              <p>{{element.name}}</p><span>{{element.autor}}</span>
+                           </div>
+                        </td>
+                        <td >{{element.time}} </td>
+                     </tr>
+                  </template>
+               </draggable>
             </table>
          </div>
       </div>
@@ -75,7 +111,7 @@
          <span>{{song.autor}}</span>
       </div>
       <div class="play">
-         <audio id="play" controls>
+         <audio id="play" controls @ended="playSong()">
             <source src="@/assets/songs/testSong.mp3" type="audio/mpeg">
             Tu navegador no soporta el elemento de audio.
          </audio>
@@ -100,210 +136,57 @@ import { listSongs } from "../graphql/queries";
 
 // @ is an alias to /src
 //Ui
+import draggable from "vuedraggable";
 import PaperHeader from '@/components/Header.vue';
 
 //Components
 //import HeaderFooter from '@/website/components/HeaderFooter.vue';
 
+
 export default {
    name: 'dash-view',
    components: {
       PaperHeader,
-      //UiSlider,
+      draggable,
    },
    data() {
       return { 
          data:{
-            SNG:[
-               {
-                  id:'testSong.mp3',
-                  name:'Straw Berry',
-                  albun:'Viva la vida or death and all his friends',
-                  time:'4:09',
-                  autor:'Coldplay',
-               },
-               {
-                  id:'ya_me_entere.mp3',
-                  name:'Ya Me Entere',
-                  albun:'Reik',
-                  time:'3:29',
-                  autor:'Reik',
-               },
-               {
-                  id:'the_way.mp3',
-                  name:'The Way',
-                  albun:'The Way',
-                  time:'3:46',
-                  autor:'Ariana Grande',
-               },
-               {
-                  id:'diamonds.mp3',
-                  name:'Diamonds',
-                  albun:'Diamonds',
-                  time:'4:42',
-                  autor:'Rihanna',
-               },
+            SNG:[],
+            ADS:[],
+            COL:[
                {
                   name:'Unforgettable',
                   albun:'Unforgettable',
                   time:'3:12',
-                  autor:'Nat King Cold',
-               },
-               {
-                  name:'Living Mice',
-                  albun:'C418',
-                  time:'2:58',
-                  autor:'Nat King Cold',
-               },
-               {
-                  name:'Always',
-                  albun:'Favored Nations',
-                  time:'3:38',
-                  autor:'Favored Nations',
-               },
-               {
-                  name:'No Roots',
-                  albun:'No Roots',
-                  time:'3:56',
-                  autor:'Alice Merton',
-               },
-               {
-                  name:'Unforgettable',
-                  albun:'Unforgettable',
-                  time:'3:12',
-                  autor:'Nat King Cold',
-               },
-               {
-                  name:'Living Mice',
-                  albun:'C418',
-                  time:'2:58',
-                  autor:'Nat King Cold',
-               },
-               {
-                  name:'Always',
-                  albun:'Favored Nations',
-                  time:'3:38',
-                  autor:'Favored Nations',
-               },
-               {
-                  name:'No Roots',
-                  albun:'No Roots',
-                  time:'3:56',
-                  autor:'Alice Merton',
-               },
-               {
-                  name:'Unforgettable',
-                  albun:'Unforgettable',
-                  time:'3:12',
-                  autor:'Nat King Cold',
-               },
-               {
-                  name:'Living Mice',
-                  albun:'C418',
-                  time:'2:58',
-                  autor:'Nat King Cold',
-               },
-               {
-                  name:'Always',
-                  albun:'Favored Nations',
-                  time:'3:38',
-                  autor:'Favored Nations',
-               },
-               {
-                  name:'No Roots',
-                  albun:'No Roots',
-                  time:'3:56',
-                  autor:'Alice Merton',
-               },
-               {
-                  name:'Unforgettable',
-                  albun:'Unforgettable',
-                  time:'3:12',
-                  autor:'Nat King Cold',
-               },
-               {
-                  name:'Living Mice',
-                  albun:'C418',
-                  time:'2:58',
-                  autor:'Nat King Cold',
-               },
-               {
-                  name:'Always',
-                  albun:'Favored Nations',
-                  time:'3:38',
-                  autor:'Favored Nations',
-               },
-               {
-                  name:'No Roots',
-                  albun:'No Roots',
-                  time:'3:56',
-                  autor:'Alice Merton',
-               },
-            ],
-            ADS:[
-               {
-                  name:'Lorem impsu',
-                  autor:'Businnes',
-                  time:'3:12',
-               },
-               {
-                  name:'Lorem impsu',
-                  autor:'Businnes',
-                  time:'3:12',
-               },
-               {
-                  name:'Lorem impsu',
-                  autor:'Businnes',
-                  time:'3:12',
-               },
-               {
-                  name:'Lorem impsu',
-                  autor:'Businnes',
-                  time:'3:12',
-               },
-               {
-                  name:'Lorem impsu',
-                  autor:'Businnes',
-                  time:'3:12',
-               },
-               {
-                  name:'Lorem impsu',
-                  autor:'Businnes',
-                  time:'3:12',
-               },
-               {
-                  name:'Lorem impsu',
-                  autor:'Businnes',
-                  time:'3:12',
-               },
-               {
-                  name:'Lorem impsu',
-                  autor:'Businnes',
-                  time:'3:12',
+                  autor:'Nat King Cole',
                }
             ]
          },
          song:{
-            name:'Unforgettable',
-            albun:'Unforgettable',
-            time:'3:12',
-            autor:'Nat King Cole',
-         }
+           
+         },
+         
       }
    },
    created() {
       this.data.SNG = []
       this.data.ADS = []
+      this.data.COL = []
       this.listSong()
    },
    methods:{
-      async playSong(data){
-         
-         const url = await Storage.get(data.id+".mp3", {
+      async playSong(first){
+         console.log('playSong');
+         if (!first) {
+            console.log('no es primera');
+            this.data.COL.shift()
+         }
+         const url = await Storage.get( this.data.COL[0].id+".mp3", {
             level: "public"
          });
     
-         this.song = data
+         this.song = this.data.COL[0]
          const audioElement = document.getElementById("play");
          audioElement.childNodes[0].src = url
          audioElement.load();
@@ -326,6 +209,39 @@ export default {
             console.log(error);
             tools.popUp('info', error)
          }
+      },
+      //Drag
+      log: function(evt) {
+         console.log(evt);
+      },
+      cloneSong({ id }) {
+         let data = null
+         data = this.data.SNG.find(item => item.id === id)
+         if (!data) {
+            data = this.data.ADS.find(item => item.id === id)
+         }
+         return data
+      }
+   },
+   computed:{
+      dragOptions() {
+         return {
+            animation: 200,
+            group: "description",
+            disabled: false,
+            ghostClass: "ghost"
+         };
+      }
+   },
+   watch:{
+      data:{
+         handler(newItems) {
+            // This function will be called whenever 'items' changes.
+            if (newItems.COL.length == 1) {
+               this.playSong(true)
+            }
+         },
+         deep: true,
       }
    }
 }
