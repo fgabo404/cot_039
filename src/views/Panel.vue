@@ -166,7 +166,7 @@ export default {
          song:{
            
          },
-         
+         play: false
       }
    },
    created() {
@@ -177,20 +177,25 @@ export default {
    },
    methods:{
       async playSong(first){
-         console.log('playSong');
-         if (!first) {
-            console.log('no es primera');
-            this.data.COL.shift()
+         try {
+            console.log('playSong');
+            if (!first) {
+               console.log('no es primera');
+               this.data.COL.shift()
+            }
+            const url = await Storage.get( this.data.COL[0].id+".mp3", {
+               level: "public"
+            });
+       
+            this.song = this.data.COL[0]
+            const audioElement = document.getElementById("play");
+            audioElement.childNodes[0].src = url
+            audioElement.load();
+            audioElement.play();
+            
+         } catch (error) {
+            console.log(error);
          }
-         const url = await Storage.get( this.data.COL[0].id+".mp3", {
-            level: "public"
-         });
-    
-         this.song = this.data.COL[0]
-         const audioElement = document.getElementById("play");
-         audioElement.childNodes[0].src = url
-         audioElement.load();
-         audioElement.play();
          //if (audioElement.paused) {
          //} else {
          //   audioElement.pause();
@@ -237,8 +242,12 @@ export default {
       data:{
          handler(newItems) {
             // This function will be called whenever 'items' changes.
-            if (newItems.COL.length == 1) {
+            if (newItems.COL.length == 1 && this.play == false) {
                this.playSong(true)
+               this.play = true
+            }
+            if (newItems.COL.length == 0) {
+               this.play = false
             }
          },
          deep: true,
