@@ -1,10 +1,14 @@
 <template>
    <img  src="@/assets/bgTexture.png" class="bgDash" id="bgDash" alt="">
    <PaperHeader/>
-   <div class="wrap panel container-in">
+   <div class="wrap panel container-in" v-if="data.RAM">
       <div class="col col-md-3"> 
          <div class="block">
             <h4>Playlist</h4>
+            <div class="input-wrap inputSearch">
+               <input type="text" v-on:keyup="(event) => search('SNG', event.target.value)">
+               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#ccc" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5A6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5S14 7.01 14 9.5S11.99 14 9.5 14z"/></svg>
+            </div>
             <table>
                <tr>
                   <th>#</th>
@@ -14,7 +18,7 @@
                </tr>
                <draggable
                   class="dragArea "
-                  :list="data.SNG"
+                  :list="data.RAM.SNG"
                   :group="{ name: 'song', pull: 'clone', put: false }"
                   :clone="cloneSong"
                   @change="log"
@@ -23,7 +27,7 @@
                >
                   <template #item="{element}">
                      <tr v-on:click="element" >
-                        <td>{{data.SNG.indexOf(element)+1}}</td>
+                        <td>{{data.RAM.SNG.indexOf(element)+1}}</td>
                         <td>
                            <div>
                               <p>{{element.att.name}}</p><span>{{element.att.artista}}</span>
@@ -40,6 +44,10 @@
       <div style=" padding: 0 10px 0 20px;" class="col col-md-3">
          <div class="block">
             <h4>Ads</h4>
+            <div class="input-wrap inputSearch">
+               <input type="text" v-on:keyup="(event) => search('ADS', event.target.value)">
+               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#ccc" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5A6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5S14 7.01 14 9.5S11.99 14 9.5 14z"/></svg>
+            </div>
             <table>
                <tr>
                   <th>#</th>
@@ -48,7 +56,7 @@
                </tr>
                <draggable
                   class="dragArea "
-                  :list="data.ADS"
+                  :list="data.RAM.ADS"
                   :group="{ name: 'song', pull: 'clone', put: false }"
                   :clone="cloneSong"
                   @change="log"
@@ -57,7 +65,7 @@
                >
                   <template #item="{element}">
                      <tr v-on:click="element" >
-                        <td>{{data.ADS.indexOf(element)+1}}</td>
+                        <td>{{data.RAM.ADS.indexOf(element)+1}}</td>
                         <td>
                            <div>
                                <p>{{element.att.name}}</p><span>{{element.att.artista}}</span>
@@ -73,42 +81,43 @@
       <div style=" padding: 0 20px 0 10px;" class="col col-md-3">
          <div class="block">
             <h4>Play List</h4>
-               <draggable
-                  class="dragArea wrap"
-                  style="width: 100%;"
-               
-                  :list="data.LST"
-                  :group="{ name: 'song', pull: 'clone', put: false }"
-                  :clone="cloneSong"
-                  @change="log"
-                  item-key="id"
-               >
-                  <template #item="{element}">
-                     <div class="list" >
-                        <p class="target"  data-toggle="collapse" :href="'#list-'+element.id" role="button" aria-expanded="false" aria-controls="collapseExample">{{data.LST.indexOf(element)+1}}  {{element.att.name}}  </p>
-                        <div class="collapse" :id="'list-'+element.id">
-                           <div class="wrap">
-                              <table >
-                                 <tr>
-                                    <th>Title</th>
-                                    <th>Time</th>
-                                 </tr>
-                                 <tr  v-for="(row, index) in element.att.list" :key="index" >
-                                    <td>
-                                       <div>
-                                          <p>{{row.att.name}}</p><span>{{row.att.autor}}</span>
-                                       </div>
-                                    </td>
-                                    <td >{{row.att.duracion}} </td>
-                                 </tr>
-                              </table>
-                           </div>
+            <div class="input-wrap inputSearch">
+               <input type="text" v-on:keyup="(event) => search('LST', event.target.value)">
+               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#ccc" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5A6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5S14 7.01 14 9.5S11.99 14 9.5 14z"/></svg>
+            </div>
+            <draggable
+               class="dragArea wrap"
+               style="width: 100%;"
+               :list="data.RAM.LST"
+               :group="{ name: 'song', pull: 'clone', put: false }"
+               :clone="cloneSong"
+               @change="log"
+               item-key="id"
+            >
+               <template #item="{element}">
+                  <div class="list" >
+                     <p class="target"  data-toggle="collapse" :href="'#list-'+element.id" role="button" aria-expanded="false" aria-controls="collapseExample">{{data.LST.indexOf(element)+1}}  {{element.att.name}}  </p>
+                     <div class="collapse" :id="'list-'+element.id">
+                        <div class="wrap">
+                           <table >
+                              <tr>
+                                 <th>Title</th>
+                                 <th>Time</th>
+                              </tr>
+                              <tr  v-for="(row, index) in element.att.list" :key="index" >
+                                 <td>
+                                    <div>
+                                       <p>{{row.att.name}}</p><span>{{row.att.autor}}</span>
+                                    </div>
+                                 </td>
+                                 <td >{{row.att.duracion}} </td>
+                              </tr>
+                           </table>
                         </div>
                      </div>
-                  </template>
-               </draggable>
-            <table>
-            </table>
+                  </div>
+               </template>
+            </draggable>
          </div>
       </div>
       <div class="col col-md-3">
@@ -139,6 +148,7 @@
                >
                   <template #item="{element}">
                      <tr v-on:click="element" >
+                        <td>{{data.COL.indexOf(element)+1}}</td>
                         <td>
                            <div>
                               <p>{{element.att.name}}</p><span>{{element.att.autor}}</span>
@@ -178,8 +188,10 @@
 
 <script>
 //tools
-
 import * as tools from '@/store/tools.js'
+import { v4 as uuidv4 } from 'uuid';
+
+//Aws
 import { API, Storage } from "aws-amplify";
 import { listRecords } from "../graphql/queries";
 
@@ -242,13 +254,37 @@ export default {
          //   audioElement.pause();
          //}
       },
+      search(list, value){
+         let data = this.data[list]
+         let result = []
+         try {
+            if (value=='') {
+               this.data.RAM[list] = this.data[list] 
+               return
+            }
+            for (let i = 0; i < data.length; i++) {
+               const att = data[i].att;
+               for (const key in att) {
+                  if ( typeof att[key] == 'string' && key != 'url'  && att[key].toLowerCase().includes(value.toLowerCase())) {
+                     result.push(data[i])
+                     break;
+                  }
+               }
+            }
+            console.log(result);
+            this.data.RAM[list] = result
+         } catch (error) {
+            console.log(error);
+         }
+      },
+      //data bind
       async listSong( ){
          try {
             let pulldata = await API.graphql({
                query: listRecords
             })
             pulldata = pulldata.data.listRecords.items
-            console.log(pulldata);
+            console.log('pulldata:', pulldata);
             pulldata.forEach(element => {
                switch (element.entity) {
                  case 'SNG':
@@ -261,6 +297,7 @@ export default {
                   break;
                }
             });
+            this.data.RAM = {...this.data}
          } catch (error) {
             console.log(error);
             tools.popUp('info', error)
@@ -277,16 +314,19 @@ export default {
       },
       cloneSong({ id, entity, att }) {
          let data = null
-         console.log(id, entity,att);
+         console.log(id, entity,att, uuidv4());
+         //console.log(data)
           switch (entity) {
             case 'SNG':
                data = this.data[att.type].find(item => item.id === id)
-               console.log(data);
+               //console.log(data);
+               //data.id = uuidv4();
                return data
             break;
             case 'LST':
                data = this.data.LST.find(item => item.id === id)
-               console.log(data);
+               //console.log(data);
+               //data.id = uuidv4();
                return data
             break;
          }

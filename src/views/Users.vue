@@ -57,8 +57,9 @@
 
 <script>
 //tools
-
 import * as tools from '@/store/tools.js'
+
+//AWS
 import { API } from "aws-amplify";
 import { listRecords } from "../graphql/queries";
 import { deleteRecord, updateRecord } from '../graphql/mutations';

@@ -33,7 +33,7 @@
 // Default theme
 
 // @ is an alias to /src
-//Ui
+//Ui 
 import PaperHeader from '@/components/Header.vue';
 
 //Components

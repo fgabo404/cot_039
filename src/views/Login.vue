@@ -132,7 +132,7 @@ export default {
             const session = await Auth.currentUserCredentials();
             console.log(user, session);
             console.clear();
-            //this.signIn('admin', 'admin')
+            this.signIn('admin', 'admin')
          } catch (error) {
             console.log('error signing in', error);
             tools.popUp('info', 'Incorrect user or password')

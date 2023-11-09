@@ -18,7 +18,7 @@
         <router-link to="/blog">
           Blog
         </router-link>
-        <router-link to="/users">
+        <router-link to="/users" v-if="user.att.permits == 'admin'">
           Users
         </router-link>
       </div>
