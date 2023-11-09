@@ -1,9 +1,8 @@
 <template>
    <img  src="@/assets/bgTexture.png" class="bgDash" id="bgDash" alt="">
    <PaperHeader/>
-
    <div class="wrap panel container-in">
-      <div class="col col-md-6"> 
+      <div class="col col-md-3"> 
          <div class="block">
             <h4>Playlist</h4>
             <table>
@@ -13,7 +12,7 @@
                   <th>Albun</th>
                   <th>Time</th>
                </tr>
-                <draggable
+               <draggable
                   class="dragArea "
                   :list="data.SNG"
                   :group="{ name: 'song', pull: 'clone', put: false }"
@@ -27,18 +26,18 @@
                         <td>{{data.SNG.indexOf(element)+1}}</td>
                         <td>
                            <div>
-                              <p>{{element.name}}</p><span>{{element.autor}}</span>
+                              <p>{{element.att.name}}</p><span>{{element.att.artista}}</span>
                            </div>
                         </td>
-                        <td >{{element.albun}} </td>
-                        <td >{{element.time}} </td>
+                        <td >{{element.att.albun}} </td>
+                        <td >{{element.att.duracion}} </td>
                      </tr>
                   </template>
                </draggable>
             </table>
          </div>
       </div>
-      <div class="col mid col-md-3">
+      <div style=" padding: 0 10px 0 20px;" class="col col-md-3">
          <div class="block">
             <h4>Ads</h4>
             <table>
@@ -61,13 +60,54 @@
                         <td>{{data.ADS.indexOf(element)+1}}</td>
                         <td>
                            <div>
-                              <p>{{element.name}}</p><span>{{element.autor}}</span>
+                               <p>{{element.att.name}}</p><span>{{element.att.artista}}</span>
                            </div>
                         </td>
-                        <td >{{element.time}} </td>
+                        <td >{{element.att.duracion}} </td>
                      </tr>
                   </template>
                </draggable>
+            </table>
+         </div>
+      </div>
+      <div style=" padding: 0 20px 0 10px;" class="col col-md-3">
+         <div class="block">
+            <h4>Play List</h4>
+               <draggable
+                  class="dragArea wrap"
+                  style="width: 100%;"
+               
+                  :list="data.LST"
+                  :group="{ name: 'song', pull: 'clone', put: false }"
+                  :clone="cloneSong"
+                  @change="log"
+                  item-key="id"
+               >
+                  <template #item="{element}">
+                     <div class="list" >
+                        <p class="target"  data-toggle="collapse" :href="'#list-'+element.id" role="button" aria-expanded="false" aria-controls="collapseExample">{{data.LST.indexOf(element)+1}}  {{element.att.name}}  </p>
+                        <div class="collapse" :id="'list-'+element.id">
+                           <div class="wrap">
+                              <table >
+                                 <tr>
+                                    <th>Title</th>
+                                    <th>Time</th>
+                                 </tr>
+                                 <tr  v-for="(row, index) in element.att.list" :key="index" >
+                                    <td>
+                                       <div>
+                                          <p>{{row.att.name}}</p><span>{{row.att.autor}}</span>
+                                       </div>
+                                    </td>
+                                    <td >{{row.att.duracion}} </td>
+                                 </tr>
+                              </table>
+                           </div>
+                        </div>
+                     </div>
+                  </template>
+               </draggable>
+            <table>
             </table>
          </div>
       </div>
@@ -76,9 +116,18 @@
             <h4>Cola</h4>
             <table>
                <tr>
-                  <th>#</th>
                   <th>Title</th>
+                  <th>Albun</th>
                   <th>Time</th>
+               </tr>
+                <tr v-if="song" style="color:#8cff1c;">
+                  <td>
+                     <div>
+                        <p>{{song.att.name}}</p><span>{{song.att.artista}}</span>
+                     </div>
+                  </td>
+                  <td >{{song.att.albun}} </td>
+                  <td >{{song.att.duracion}} </td>
                </tr>
                <draggable
                   class="dragArea "
@@ -90,13 +139,13 @@
                >
                   <template #item="{element}">
                      <tr v-on:click="element" >
-                        <td>{{data.COL.indexOf(element)+1}}</td>
                         <td>
                            <div>
-                              <p>{{element.name}}</p><span>{{element.autor}}</span>
+                              <p>{{element.att.name}}</p><span>{{element.att.autor}}</span>
                            </div>
                         </td>
-                        <td >{{element.time}} </td>
+                        <td >{{element.att.albun}} </td>
+                        <td >{{element.att.duracion}} </td>
                      </tr>
                   </template>
                </draggable>
@@ -106,12 +155,12 @@
    </div>
    <div class="player"> 
     <div class="wrap container-in">
-      <div class="song">
-         <p>{{song.name}}</p>
-         <span>{{song.autor}}</span>
+      <div class="song" v-if="song">
+         <p>{{song.att.name}}</p>
+         <span>{{song.att.autor}}</span>
       </div>
       <div class="play">
-         <audio id="play" controls @ended="playSong()">
+         <audio id="play" controls @ended="song = null; playSong()">
             <source src="@/assets/songs/testSong.mp3" type="audio/mpeg">
             Tu navegador no soporta el elemento de audio.
          </audio>
@@ -132,7 +181,7 @@
 
 import * as tools from '@/store/tools.js'
 import { API, Storage } from "aws-amplify";
-import { listSongs } from "../graphql/queries";
+import { listRecords } from "../graphql/queries";
 
 // @ is an alias to /src
 //Ui
@@ -154,40 +203,32 @@ export default {
          data:{
             SNG:[],
             ADS:[],
-            COL:[
-               {
-                  name:'Unforgettable',
-                  albun:'Unforgettable',
-                  time:'3:12',
-                  autor:'Nat King Cole',
-               }
-            ]
+            LST:[],
+            COL:[  ]
          },
-         song:{
-           
-         },
+         song:null,
          play: false
       }
    },
    created() {
-      this.data.SNG = []
-      this.data.ADS = []
-      this.data.COL = []
       this.listSong()
    },
    methods:{
       async playSong(first){
+         if (this.data.COL.length == 0) {
+            return
+         }
          try {
             console.log('playSong');
+            this.song = {...this.data.COL[0]}
+            this.data.COL.shift()
             if (!first) {
                console.log('no es primera');
-               this.data.COL.shift()
             }
-            const url = await Storage.get( this.data.COL[0].id+".mp3", {
+            const url = await Storage.get( this.song.id+".mp3", {
                level: "public"
             });
        
-            this.song = this.data.COL[0]
             const audioElement = document.getElementById("play");
             audioElement.childNodes[0].src = url
             audioElement.load();
@@ -204,11 +245,21 @@ export default {
       async listSong( ){
          try {
             let pulldata = await API.graphql({
-               query: listSongs
+               query: listRecords
             })
-            pulldata = pulldata.data.listSongs.items
+            pulldata = pulldata.data.listRecords.items
+            console.log(pulldata);
             pulldata.forEach(element => {
-               this.data[element.key].push(JSON.parse(element.att))
+               switch (element.entity) {
+                 case 'SNG':
+                     element.att = JSON.parse(element.att)
+                     this.data[element.att.type].push(element)
+                  break;
+                  case 'LST':
+                     element.att = JSON.parse(element.att)
+                     this.data[element.entity].push(element)
+                  break;
+               }
             });
          } catch (error) {
             console.log(error);
@@ -218,14 +269,27 @@ export default {
       //Drag
       log: function(evt) {
          console.log(evt);
-      },
-      cloneSong({ id }) {
-         let data = null
-         data = this.data.SNG.find(item => item.id === id)
-         if (!data) {
-            data = this.data.ADS.find(item => item.id === id)
+         if (evt.added && evt.added.element.entity == 'LST') {
+            let index = this.data.COL.indexOf(evt.added.element)
+            this.data.COL.splice(index,1 , ...evt.added.element.att.list)
+            console.log(index);
          }
-         return data
+      },
+      cloneSong({ id, entity, att }) {
+         let data = null
+         console.log(id, entity,att);
+          switch (entity) {
+            case 'SNG':
+               data = this.data[att.type].find(item => item.id === id)
+               console.log(data);
+               return data
+            break;
+            case 'LST':
+               data = this.data.LST.find(item => item.id === id)
+               console.log(data);
+               return data
+            break;
+         }
       }
    },
    computed:{
@@ -242,9 +306,11 @@ export default {
       data:{
          handler(newItems) {
             // This function will be called whenever 'items' changes.
-            if (newItems.COL.length == 1 && this.play == false) {
-               this.playSong(true)
-               this.play = true
+            if (newItems.COL.length == 1 && this.play == false && !this.song ) {
+               setTimeout(() => {
+                  this.playSong(true)
+                  this.play = true
+               }, 500);
             }
             if (newItems.COL.length == 0) {
                this.play = false

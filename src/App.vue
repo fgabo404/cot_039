@@ -69,7 +69,7 @@
     box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.50);
 
   }
-  .shadow-button{ .shadow-button;}  
+  .shadow-button{ .shadow-button; }  
   
   //Global Styles ----------------------------------------
   .absoluteCenterFlex(){
@@ -269,12 +269,24 @@
     
   }
   // Inputs
-  input{
+  .input-wrap{
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 20px 0;
+  }
+  label{
+    color: @light;
+    font-size: 14px;
+    margin: 0;
+  }
+  input, select, textarea{
     border: none;
     outline: none;
-    height: 40px;
-    padding: 10px;
+    height: 45px;
+    padding: 10px 15px;
     font-size: 14px;
+    border-radius: 20px;
+    background: @light;
   }
   input:focus, textarea:focus, select:focus,
   input:hover, textarea:hover, select:hover{
@@ -284,6 +296,87 @@
   input:focus-visible, textarea:focus-visible, select:focus-visible {
     border: none;
     outline:none;
+  }
+  //file
+  input[type="file"] {
+    color: #000000;
+    height: 45px;
+    outline: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  input[type="file"]:focus-within::file-selector-button,
+  input[type="file"]:focus::file-selector-button {
+    outline-offset: 2px;
+  }
+
+  input[type="file"]::before {
+    top: 12px;
+  }
+
+  input[type="file"]::after {
+    top: 12px;
+  }
+
+  /* ------- From Step 2 ------- */
+
+  input[type="file"] {
+    position: relative;
+    display: flex;
+  }
+
+  input[type="file"]::file-selector-button {
+    margin: 0 auto;
+    color: transparent;
+  }
+
+  /* Faked label styles and icon */
+  input[type="file"]::before {
+    position: absolute;
+    pointer-events: none;
+    /*   top: 11px; */
+    left: 40px;
+    color: #404040;
+    content: "Upload File";
+  }
+
+  input[type="file"]::after {
+    position: absolute;
+    pointer-events: none;
+    /*   top: 10px; */
+    left: 16px;
+    height: 20px;
+    width: 20px;
+    content: "";
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23404040'%3E%3Cpath d='M18 15v3H6v-3H4v3c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-3h-2zM7 9l1.41 1.41L11 7.83V16h2V7.83l2.59 2.58L17 9l-5-5-5 5z'/%3E%3C/svg%3E");
+  }
+
+  /* ------- From Step 1 ------- */
+
+  /* file upload button */
+  input[type="file"]::file-selector-button {
+    //color: #404040;
+    padding: 0;
+    height: 45px;
+    cursor: pointer;
+    background-color: white;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.05);
+    margin-right: 15px;
+    transition: background-color 200ms;
+  }
+
+  /* file upload button hover state */
+  input[type="file"]::file-selector-button:hover {
+    .hover;
+    background-color: #f3f4f6;
+  }
+
+  /* file upload button active state */
+  input[type="file"]::file-selector-button:active {
+    .hover;
+    background-color: #e5e7eb;
   }
   //Estructure Components Styles -----------------------------
   .container-in{
@@ -396,7 +489,12 @@
   @media (max-width: 520px) {
     
   }
-  //Components Styles ----------------------------------------
+  //Components Styles ---------------------------------------
+  .modal-content{
+    background: @grayBlack;
+    padding: 40px;
+    border-radius: 25px;
+  }
   .btn-g{
     padding: 10px 30px;
     color: @grayLight;
@@ -410,10 +508,16 @@
     &.dark{
       color: @grayLight;
       background: @grayBlack;
+      &:hover{
+        .shadow-button;
+      }
     }
     &.light{
       color: @grayBlack;
       background: @light;
+      &:hover{
+        .shadow-button;
+      }
     }
   }
   .redes{
@@ -429,6 +533,26 @@
       svg{
         width: 20px;
         height: 20px;
+      }
+    }
+  }
+  .inputSearch{
+    width: 100%;
+    .absoluteCenterFlex;
+    flex-direction: row;
+    input{
+      width: calc( 100% - 40px);
+      height: 40px;
+      border-radius: 25px 0 0 25px;
+    }
+    svg{
+      background: @light;
+      width: 40px;
+      height: 40px;
+      border-radius: 0 25px 25px 0;
+      padding: 5px;
+      path{
+        fill:@font;
       }
     }
   }
@@ -460,7 +584,7 @@
     padding: 30px 40px;
   }
   .header{
-    padding: 20px 0;
+    padding: 20px 0 15px;
     .wrap{
       .shadow-block;
       height: 80px;
@@ -484,6 +608,12 @@
           margin:0;
         }
       }
+      .details{
+          span{
+            font-size: 10px;
+            font-weight: 700;
+          }
+        }
       .menu{
         a{
           color: @light;
@@ -539,6 +669,221 @@
           width: 700px;
         }
       }
+    }
+  }
+  .login{
+    height: 100vh;
+    .absoluteCenterFlex;
+    h1 {
+      font-weight: bold;
+      margin: 0;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    p {
+      font-size: 14px;
+      font-weight: 100;
+      line-height: 20px;
+      letter-spacing: 0.5px;
+      margin: 20px 0 30px;
+    }
+
+    span {
+      font-size: 12px;
+    }
+
+    a {
+      color: #333;
+      font-size: 14px;
+      text-decoration: none;
+      margin: 15px 0;
+    }
+
+    button {
+      border-radius: 20px;
+      border: 1px solid @gray;
+      background-color: @gray;
+      .shadow-button;
+      color: #FFFFFF;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 12px 45px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: transform 80ms ease-in;
+    }
+
+    button:active {
+      transform: scale(0.95);
+    }
+
+    button:focus {
+      outline: none;
+    }
+
+    button.ghost {
+      background-color: transparent;
+      border-color: #FFFFFF;
+      box-shadow: none;
+    }
+
+    form {
+      background-color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 0 50px;
+      height: 100%;
+      text-align: center;
+    }
+
+    input {
+      background-color: #eee;
+      border: none;
+      padding: 12px 15px;
+      margin: 8px 0;
+      width: 100%;
+    }
+
+    .container {
+      background-color: #fff;
+      border-radius: 25px;
+        box-shadow: 0 14px 28px rgba(0,0,0,0.25), 
+          0 10px 10px rgba(0,0,0,0.22);
+      position: relative;
+      overflow: hidden;
+      width: 768px;
+      max-width: 100%;
+      min-height: 480px;
+    }
+
+    .form-container {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      transition: all 0.6s ease-in-out;
+    }
+
+    .sign-in-container {
+      left: 0;
+      width: 50%;
+      z-index: 2;
+    }
+
+    .container.right-panel-active .sign-in-container {
+      transform: translateX(100%);
+    }
+
+    .sign-up-container {
+      left: 0;
+      width: 50%;
+      opacity: 0;
+      z-index: 1;
+    }
+
+    .container.right-panel-active .sign-up-container {
+      transform: translateX(100%);
+      opacity: 1;
+      z-index: 5;
+      animation: show 0.6s;
+    }
+
+    @keyframes show {
+      0%, 49.99% {
+        opacity: 0;
+        z-index: 1;
+      }
+      
+      50%, 100% {
+        opacity: 1;
+        z-index: 5;
+      }
+    }
+
+    .overlay-container {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 50%;
+      height: 100%;
+      overflow: hidden;
+      transition: transform 0.6s ease-in-out;
+      z-index: 100;
+    }
+
+    .container.right-panel-active .overlay-container{
+      transform: translateX(-100%);
+    }
+
+    .overlay {
+      background: @gray;
+      background: -webkit-linear-gradient(to right, #2e2e2e, #696969);
+      background: linear-gradient(to right, #2e2e2e, #696969);
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: 0 0;
+      color: #FFFFFF;
+      position: relative;
+      left: -100%;
+      height: 100%;
+      width: 200%;
+        transform: translateX(0);
+      transition: transform 0.6s ease-in-out;
+    }
+
+    .container.right-panel-active .overlay {
+        transform: translateX(50%);
+    }
+
+    .overlay-panel {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 0 40px;
+      text-align: center;
+      top: 0;
+      height: 100%;
+      width: 50%;
+      transform: translateX(0);
+      transition: transform 0.6s ease-in-out;
+    }
+
+    .overlay-left {
+      transform: translateX(-20%);
+    }
+
+    .container.right-panel-active .overlay-left {
+      transform: translateX(0);
+    }
+
+    .overlay-right {
+      right: 0;
+      transform: translateX(0);
+    }
+
+    .container.right-panel-active .overlay-right {
+      transform: translateX(20%);
+    }
+
+    .social-container {
+      margin: 20px 0;
+    }
+
+    .social-container a {
+      border: 1px solid #DDDDDD;
+      border-radius: 50%;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 5px;
+      height: 40px;
+      width: 40px;
     }
   }
   .dash{
@@ -625,6 +970,7 @@
   .edition{
     flex-wrap: wrap;
     .centerFlex;
+    align-items: flex-start;
     .col{
       padding:0  10px;
     }
@@ -650,88 +996,27 @@
       &.up{
         height: auto;
         margin: 20px 0;
-        input[type="file"] {
-          color: #fff;
-          height: auto;
-          outline: none;
-          padding: 4px;
-          margin: -4px auto;
-        }
-
-        input[type="file"]:focus-within::file-selector-button,
-        input[type="file"]:focus::file-selector-button {
-          outline: 2px solid #ffffff;
-          outline-offset: 2px;
-        }
-
-        input[type="file"]::before {
-          top: 16px;
-        }
-
-        input[type="file"]::after {
-          top: 14px;
-        }
-
-        /* ------- From Step 2 ------- */
-
-        input[type="file"] {
-          position: relative;
-        }
-
-        input[type="file"]::file-selector-button {
-          width: 200px;
-          margin: 0 auto;
-          color: transparent;
-        }
-
-        /* Faked label styles and icon */
-        input[type="file"]::before {
-          position: absolute;
-          pointer-events: none;
-          /*   top: 11px; */
-          left: 40px;
-          color: #404040;
-          content: "Upload File";
-        }
-
-        input[type="file"]::after {
-          position: absolute;
-          pointer-events: none;
-          /*   top: 10px; */
-          left: 16px;
-          height: 20px;
-          width: 20px;
-          content: "";
-          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23404040'%3E%3Cpath d='M18 15v3H6v-3H4v3c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-3h-2zM7 9l1.41 1.41L11 7.83V16h2V7.83l2.59 2.58L17 9l-5-5-5 5z'/%3E%3C/svg%3E");
-        }
-
-        /* ------- From Step 1 ------- */
-
-        /* file upload button */
-        input[type="file"]::file-selector-button {
-          //color: #404040;
-          border-radius: 10px;
-          padding: 0 16px;
-          height: 40px;
-          cursor: pointer;
-          background-color: white;
-          border: 1px solid rgba(255, 255, 255, 0.16);
-          box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.05);
-          margin-right: 16px;
-          transition: background-color 200ms;
-        }
-
-        /* file upload button hover state */
-        input[type="file"]::file-selector-button:hover {
-          background-color: #f3f4f6;
-        }
-
-        /* file upload button active state */
-        input[type="file"]::file-selector-button:active {
-          background-color: #e5e7eb;
-        }
       }
       
+    }
+  }
+  .list{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border-radius: 15px;
+    margin: 0 0 20px 0;
+    border: 1px solid #ffffff87;
+    .wrap{
+      padding: 10px 10px;
+    }
+    .target{
+      padding: 15px 20px;
+      .text{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
     }
   }
   table{

@@ -1,5 +1,5 @@
 <template>
-  <div class="header">
+  <div class="header" v-if="render">
     <div class="wrap container-in">
       <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect width="50" height="50" rx="15" fill="#FDFDFD"/>
@@ -18,16 +18,28 @@
         <router-link to="/blog">
           Blog
         </router-link>
-        <router-link to="/">
-          Log Out
+        <router-link to="/users">
+          Users
         </router-link>
       </div>
-      <div class="profile">
+      
+      <div class="profile dropdown" data-toggle="dropdown" aria-expanded="false">
+        
         <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect width="60" height="60" rx="30" fill="#EBEBEB"/>
           <path d="M24.4616 23.6842C24.4616 26.8181 26.9465 29.3684 30 29.3684C33.0536 29.3684 35.5385 26.8181 35.5385 23.6842C35.5385 20.5503 33.0536 18 30 18C26.9465 18 24.4616 20.5503 24.4616 23.6842ZM39.8462 42H41.0769V40.7368C41.0769 35.8623 37.2111 31.8947 32.4616 31.8947H27.5385C22.7877 31.8947 18.9231 35.8623 18.9231 40.7368V42H39.8462Z" fill="#404040"/>
         </svg>
-        <p>User</p>
+        <p>{{user.att.user}}</p>
+      </div>
+      <div class="dropdown-menu">
+        <a class="dropdown-item details" >
+          <span>Details:</span> <br>
+          {{ user.att.permits }}
+        </a>
+        <a class="dropdown-item" v-on:click="logOut()">
+          <svg xmlns="http://www.w3.org/2000/svg" style=" width: 25px; height: auto; margin: 0 10px 0 0;" width="20" height="20" viewBox="0 0 24 24"><g fill="none" stroke="#404040" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="46" stroke-dashoffset="46" d="M16 5V4C16 3.44772 15.5523 3 15 3H6C5.44771 3 5 3.44772 5 4V20C5 20.5523 5.44772 21 6 21H15C15.5523 21 16 20.5523 16 20V19"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="46;0"/></path><path stroke-dasharray="12" stroke-dashoffset="12" d="M10 12h11" opacity="0"><set attributeName="opacity" begin="0.6s" to="1"/><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="12;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M21 12l-3.5 -3.5M21 12l-3.5 3.5" opacity="0"><set attributeName="opacity" begin="0.8s" to="1"/><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.8s" dur="0.2s" values="6;0"/></path></g></svg>
+          Log Out
+        </a>
       </div>
     </div>
   </div>
@@ -35,19 +47,37 @@
 
 <script>
 //tools
+import Vuex from 'vuex'
+
 export default {
   name: "paper-header",
   data() {
     return {
-     
+      render:false
     };
   },
+  created(){
+    if (this.user) {
+      this.render = true
+    }else{
+      this.logOut()
+    }
+  },
   mounted() {
-    
   },
   methods: {
-    
+    ...Vuex.mapMutations(['setUser']),
+    logOut(){
+      this.$router.push({ path: '/' })
+      setTimeout(() => {
+        
+        this.setUser(null)
+      }, 100);
+    }
   },
+  computed:{
+    ...Vuex.mapState(['user'])
+  }
 };
 </script>
 

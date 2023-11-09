@@ -1,11 +1,11 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateSongs = /* GraphQL */ `
-  subscription OnCreateSongs($filter: ModelSubscriptionSongsFilterInput) {
-    onCreateSongs(filter: $filter) {
+export const onCreateRecord = /* GraphQL */ `
+  subscription OnCreateRecord($filter: ModelSubscriptionRecordFilterInput) {
+    onCreateRecord(filter: $filter) {
       id
-      key
+      entity
       att
       createdAt
       updatedAt
@@ -13,11 +13,11 @@ export const onCreateSongs = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateSongs = /* GraphQL */ `
-  subscription OnUpdateSongs($filter: ModelSubscriptionSongsFilterInput) {
-    onUpdateSongs(filter: $filter) {
+export const onUpdateRecord = /* GraphQL */ `
+  subscription OnUpdateRecord($filter: ModelSubscriptionRecordFilterInput) {
+    onUpdateRecord(filter: $filter) {
       id
-      key
+      entity
       att
       createdAt
       updatedAt
@@ -25,11 +25,11 @@ export const onUpdateSongs = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteSongs = /* GraphQL */ `
-  subscription OnDeleteSongs($filter: ModelSubscriptionSongsFilterInput) {
-    onDeleteSongs(filter: $filter) {
+export const onDeleteRecord = /* GraphQL */ `
+  subscription OnDeleteRecord($filter: ModelSubscriptionRecordFilterInput) {
+    onDeleteRecord(filter: $filter) {
       id
-      key
+      entity
       att
       createdAt
       updatedAt

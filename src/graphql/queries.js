@@ -1,11 +1,11 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getSongs = /* GraphQL */ `
-  query GetSongs($id: ID!) {
-    getSongs(id: $id) {
+export const getRecord = /* GraphQL */ `
+  query GetRecord($id: ID!) {
+    getRecord(id: $id) {
       id
-      key
+      entity
       att
       createdAt
       updatedAt
@@ -13,16 +13,16 @@ export const getSongs = /* GraphQL */ `
     }
   }
 `;
-export const listSongs = /* GraphQL */ `
-  query ListSongs(
-    $filter: ModelSongsFilterInput
+export const listRecords = /* GraphQL */ `
+  query ListRecords(
+    $filter: ModelRecordFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listSongs(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listRecords(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        key
+        entity
         att
         createdAt
         updatedAt

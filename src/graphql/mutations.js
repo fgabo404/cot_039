@@ -1,14 +1,14 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createSongs = /* GraphQL */ `
-  mutation CreateSongs(
-    $input: CreateSongsInput!
-    $condition: ModelSongsConditionInput
+export const createRecord = /* GraphQL */ `
+  mutation CreateRecord(
+    $input: CreateRecordInput!
+    $condition: ModelRecordConditionInput
   ) {
-    createSongs(input: $input, condition: $condition) {
+    createRecord(input: $input, condition: $condition) {
       id
-      key
+      entity
       att
       createdAt
       updatedAt
@@ -16,14 +16,14 @@ export const createSongs = /* GraphQL */ `
     }
   }
 `;
-export const updateSongs = /* GraphQL */ `
-  mutation UpdateSongs(
-    $input: UpdateSongsInput!
-    $condition: ModelSongsConditionInput
+export const updateRecord = /* GraphQL */ `
+  mutation UpdateRecord(
+    $input: UpdateRecordInput!
+    $condition: ModelRecordConditionInput
   ) {
-    updateSongs(input: $input, condition: $condition) {
+    updateRecord(input: $input, condition: $condition) {
       id
-      key
+      entity
       att
       createdAt
       updatedAt
@@ -31,14 +31,14 @@ export const updateSongs = /* GraphQL */ `
     }
   }
 `;
-export const deleteSongs = /* GraphQL */ `
-  mutation DeleteSongs(
-    $input: DeleteSongsInput!
-    $condition: ModelSongsConditionInput
+export const deleteRecord = /* GraphQL */ `
+  mutation DeleteRecord(
+    $input: DeleteRecordInput!
+    $condition: ModelRecordConditionInput
   ) {
-    deleteSongs(input: $input, condition: $condition) {
+    deleteRecord(input: $input, condition: $condition) {
       id
-      key
+      entity
       att
       createdAt
       updatedAt

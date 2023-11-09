@@ -14,6 +14,9 @@
     "categories": {
       "auth": {
         "seminario": {}
+      },
+      "storage": {
+        "s3seminariostoragecffe284a": {}
       }
     }
   }

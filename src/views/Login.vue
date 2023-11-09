@@ -1,6 +1,44 @@
 <template>
    <img  src="@/assets/bgTexture.png" class="bgDash" id="bgDash" alt="">
-   <section class="login-wrap absoluteCenterFlex">
+   <div class="login">
+      <div class="container" :class="{'right-panel-active': mode == 'signUp'}">
+         <div class="form-container sign-up-container">
+            <form action="#">
+               <h2> <strong> Crea una Cuenta </strong> </h2>
+               <span>Introduce tus datos</span>
+               <input type="text" placeholder="User" v-model="user"/>
+               <input type="password" placeholder="Password" v-model="pass"/>
+               <br>
+               <button type="button" v-on:click="signUp( user, pass)">Sign Up</button>
+            </form>
+         </div>
+         <div class="form-container sign-in-container">
+            <form action="#">
+               <h2> <strong> Inicia Sesion </strong> </h2>
+               <span>Introduce tus datos</span>
+               <input type="text" placeholder="User" v-model="user" />
+               <input type="password" placeholder="Password" v-model="pass" />
+               <a v-on:click="forgotPass() " >Forgot your password?</a>
+               <button type="button" v-on:click="signIn( user, pass)"> Sign In</button>
+            </form>
+         </div>
+         <div class="overlay-container">
+            <div class="overlay">
+               <div class="overlay-panel overlay-left">
+                  <h1>Ya tienes una cuenta?</h1>
+                  <p>Para seguir escuchando con nosotros, inicia sesión con tus datos personales</p>
+                  <button class="ghost" id="signIn" v-on:click="mode = 'signIn'">Sign In</button>
+               </div>
+               <div class="overlay-panel overlay-right">
+                  <h1>Nuevo Aqui</h1>
+                  <p>Introduce tus datos personales y empieza a escuchar con nosotros</p>
+                  <button class="ghost" id="signUp" v-on:click="mode = 'signUp'">Sign Up</button>
+               </div>   
+            </div>
+         </div>
+      </div>
+   </div>
+   <section v-false class="login-wrap absoluteCenterFlex">
       <div class="container-in centerFlex wrap">
          <div class="col-md-6 text" >
             <img src="@/assets/loginCover.png" alt="" srcset="">
@@ -41,10 +79,14 @@
 </template>
 
 <script>
+//AWS
+import { Auth, API } from 'aws-amplify';
+import { createRecord } from '@/graphql/mutations';
+import { getRecord } from '@/graphql/queries';
+
 //tools
 import * as tools from '@/store/tools.js'
-import { Auth } from 'aws-amplify';
-
+import Vuex from 'vuex'
 // Default theme
 
 // @ is an alias to /src
@@ -77,34 +119,112 @@ export default {
       }
    },
    created() {
+      this.signInSystem()
       setTimeout(() => {
          //tools.renderSlider('sliderShowcase')
       }, 500);
    },
    methods:{
-      async logIn( username, password   ){
-         console.log( username, password);
+      ...Vuex.mapMutations(['setUser']),
+      async signInSystem( ){
          try {
-            const user = await Auth.signIn(username, password);
+            const user = await Auth.signIn('fmangoo404@gmail.com', '1Jerusalem');
             const session = await Auth.currentUserCredentials();
-            console.log(user);
-            console.log(session);
-            this.$router.push({path:'/dash'})
+            console.log(user, session);
+            console.clear();
+            this.signIn('admin', 'admin')
          } catch (error) {
             console.log('error signing in', error);
             tools.popUp('info', 'Incorrect user or password')
          }
       },
-      async signUp( username, password   ){
-         console.log( username, password);
-         try {
-            const { user } = await Auth.signUp({ username, password });
-            tools.popUp('info', 'Bienvienido')
-            this.$router.push({path:'/dash'})
-            console.log(user);
-         } catch (error) {
-            console.log('error signing up:', error);
+      async signUp( user, pass ){
+         if (!user ) {
+            tools.popUp('question', 'Ingresa un usuario')
+            return
          }
+         if (!pass ) {
+            tools.popUp('question', 'Ingresa una contraseña')
+            return
+         }
+         //Data del usuario que se creara
+         let pushData = {
+            id:user,
+            entity:'USR',
+            att:{
+               user: user,
+               pass: pass,
+               permits:'lector'
+            }
+         }
+         try {
+            //Creaccion de record
+            console.log(">>> pushData: ",pushData);
+            let pullData = await API.graphql({
+               query: createRecord,
+               variables:{
+                  input:{
+                     id:pushData.id,
+                     entity: pushData.entity,
+                     att:JSON.stringify(pushData.att)
+                  }
+               }
+            })
+            console.log(">>> pullData: ", pullData);
+            //Seteo de usuario Global
+            this.setUser(pushData)
+            //Alerta de bienvenida 
+            tools.popUp('success', 'Bienvienido', 'Disfruta de nuestra programación diaria')
+            //Redireccionamiento al Dashboard
+            this.$router.push({path:'/dash'})
+         } catch (error) {
+            console.log(error);
+            tools.popUp('warning', 'Algo salio mal','El usuario que intentas ingresar ya esta resgistrado en nuestro sistema')
+         }
+      },
+      async signIn( user, pass ){
+         //Validacion si se ingresaron datos en los inputs correspondientes
+         if (!user ) {
+            tools.popUp('question', 'Ingresa un usuario')
+            return
+         }
+         if (!pass ) {
+            tools.popUp('question', 'Ingresa una contraseña')
+            return
+         }
+         try {
+            //Consulta del usuario
+            let pullData = await API.graphql({
+               query: getRecord,
+               variables: { id: user  }
+            });
+            console.log(">>> pullData: ", pullData);
+            pullData = pullData.data.getRecord
+            if (!pullData) {
+               tools.popUp('warning', 'El usuario que ingresaste no existe', 'Puedes crear una cuenta y disfrutar de nuestra programación diaria ')
+               return
+            }
+            pullData.att = JSON.parse(pullData.att)
+            //Validacion de contraseña
+            if (pullData.att.pass == pass) { //si coincide
+               console.log(pass);
+               //Seteo de usuario Global
+               this.setUser(pullData)
+               //Alerta de bienvenida 
+               tools.popUp('info', 'Bienvienido')
+               //Redireccionamiento al Dashboard
+               this.$router.push({path:'/dash'})
+            }else{ // si no coincide
+               tools.popUp('warning', 'Contraseña Incorrecta', 'La contraseña que ingresaste NO con coincide con el usuario "'+user+'"')
+            }
+
+         } catch (error) {
+            console.log(error);
+            tools.popUp('error', 'Algo salio mal','Contacta con tu proveedor para mas Información')
+         }
+      },
+      forgotPass(){
+         tools.popUp('info', 'Olvidaste tu contraseña?','Contacta con tu proveedor para mas Información')
       }
    }
 }

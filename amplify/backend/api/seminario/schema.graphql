@@ -1,5 +1,6 @@
-type Songs @model @auth(rules: [{allow: public}]) {
+type Record @model @auth(rules: [{allow: public}]) {
   id: ID!
-  key: String!
-  att: String
-} 
+  entity: String
+  att: AWSJSON
+}
+ 

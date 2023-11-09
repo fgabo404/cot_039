@@ -6,7 +6,7 @@ export function popUp( type, title, text) {
       title: title,
       text: text,
       icon: type,
-      confirmButtonText: 'Cool'
+      confirmButtonText: 'OK'
    })
 }
 export function toolTip(id) {
