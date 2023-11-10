@@ -12,6 +12,11 @@
                </p>
             </div>
          </div>
+         <div class="block up">
+               <a href="" class="btn-g light"  data-toggle="modal" data-target="#upPost" v-on:click="entity = 'BLO'">
+                  Postear Blog
+               </a>
+         </div>
       </div>
       <div  class="col col-md-4" style="padding:0 0 0 20px;">
          <div class="block">
@@ -22,6 +27,21 @@
                </p>
             </div>
          </div>
+         <div class="block up">
+            <a href="" class="btn-g light"  data-toggle="modal" data-target="#upPost" v-on:click="entity = 'FED'">
+               Subir Feedback
+            </a>
+         </div>
+      </div>
+   </div>
+   <div class="modal fade" id="upPost" tabindex="-1" aria-labelledby="upfileLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+         <div class="modal-content">
+            <div class="input-wrap">
+               <label for="">Encabezado</label>
+               <input type="text">
+            </div>
+         </div>
       </div>
    </div>
 </template>
@@ -30,6 +50,9 @@
 //tools
 //import * as tools from '@/store/tools.js'
 // Default theme
+//AWS
+import { API } from "aws-amplify";
+import { listRecords } from "../graphql/queries";
 
 // @ is an alias to /src
 //Ui
@@ -46,14 +69,41 @@ export default {
    },
    data() {
       return { 
-         mainClasses:['black', 'orange', 'green', 'yellow', 'white'],
+         entity: null,
       }
    },
    created() {
+      this.listPost()
       setTimeout(() => {
-         //tools.renderSlider('sliderShowcase')
       }, 500);
    },
+   methods:{
+      async listPost( ){
+         try {
+            let pulldata = await API.graphql({
+               query: listRecords
+            })
+            pulldata = pulldata.data.listRecords.items
+            console.log('pulldata:', pulldata);
+            pulldata.forEach(element => {
+               switch (element.entity) {
+                 case 'BLO':
+                    element.att = JSON.parse(element.att)
+                    this.data[element.entity].push(element)
+                  break;
+                  case 'FED':
+                     element.att = JSON.parse(element.att)
+                     this.data[element.entity].push(element)
+                  break;
+               }
+            });
+            this.data.RAM = {...this.data}
+         } catch (error) {
+            console.log(error);
+            tools.popUp('info', error)
+         }
+      },
+   }
 }
 </script>
    

@@ -936,9 +936,11 @@
     }
   }
   .blog{
+    flex-wrap: wrap;
     .centerFlex;
-    .mid{
-      padding: 0 20px;
+    align-items: flex-start;
+    .col{
+      padding:0  10px;
     }
     .block{
       height: calc(100vh - 240px);
@@ -958,6 +960,10 @@
       }
       h4{
         padding: 0 0 10px 0;
+      }
+       &.up{
+        height: auto;
+        margin: 20px 0;
       }
       .post{
         background: #ffffff28;
@@ -1000,6 +1006,7 @@
       
     }
   }
+  //View components
   .list{
     display: flex;
     flex-direction: column;
@@ -1012,10 +1019,30 @@
     }
     .target{
       padding: 15px 20px;
+      .date{
+        font-size: 10px;
+        width: 100%;
+        display: block;
+      }
       .text{
         display: flex;
         align-items: center;
         justify-content: space-between;
+      }
+      input[type="date"] {
+        width: 25px;
+        height: 25px;
+        padding: 0;
+        background: transparent;
+      }
+      input[type="date"]::-webkit-calendar-picker-indicator {
+        color: rgba(0, 0, 0, 0);
+        opacity: 1;
+        display: block;
+        background: url(https://api.iconify.design/material-symbols/date-range-rounded.svg?color=white&width=25&height=25) no-repeat;
+        width: 25px;
+        height: 25px;
+        border-width: thin;
       }
     }
   }
