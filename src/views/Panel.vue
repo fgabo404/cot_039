@@ -216,7 +216,7 @@ export default {
             SNG:[],
             ADS:[],
             LST:[],
-            COL:[  ]
+            COL:[]
          },
          song:null,
          play: false

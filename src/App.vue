@@ -288,6 +288,9 @@
     border-radius: 20px;
     background: @light;
   }
+  textarea{
+    height: auto;
+  }
   input:focus, textarea:focus, select:focus,
   input:hover, textarea:hover, select:hover{
     border: none;
@@ -969,7 +972,12 @@
         background: #ffffff28;
         padding: 20px;
         border-radius: 15px;
-        margin: 10px;
+        margin: 10px 0;
+        width: 100%;
+        span{
+          text-align: end;
+          display: block;
+        }
       }
     }
   }
